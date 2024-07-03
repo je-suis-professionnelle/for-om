@@ -1,4 +1,4 @@
-export class Lesson {
+export class Subject {
   id!: string;
   title!: string;
   created!: Date;
