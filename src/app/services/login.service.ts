@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {Observable, catchError, throwError, from} from 'rxjs';
 import {apiUrl} from "../app.config";
 import PocketBase from "pocketbase";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class LoginService {
 
   private pb: PocketBase;
 
-  constructor(private http: HttpClient) {
+  constructor(private router: Router) {
     this.pb = new PocketBase(apiUrl);
   }
 
@@ -22,8 +23,9 @@ export class LoginService {
       );
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.pb.authStore.clear();
+    await this.router.navigate(['/login']);
   }
 
   loginWithOAuth2(provider: string): Observable<any> {

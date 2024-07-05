@@ -15,10 +15,6 @@ export class LessonsService {
 
   constructor(private http: HttpClient) { }
 
-  async getAllLessons2(): Promise<ListResult<RecordModel>> {
-    return await this.pb.collection('lessons').getList(1, 50);
-  }
-
   getAllLessons(): Observable<Lesson[]> {
     return from(this.pb.collection('lessons').getFullList({
       sort: '-created'
@@ -35,7 +31,21 @@ export class LessonsService {
       title: record['title'],
       created: new Date(record.created),
       updated: new Date(record.created),
+      postCount: 0,
+      lastPostDate: null
     }
+  }
+
+  getLessonById(id: string): Observable<Lesson> {
+    return from(this.pb.collection('lessons').getOne(id)).pipe(
+      map((record: RecordModel) => this.mapRecordToLesson(record))
+    );
+  }
+
+  createLesson(lesson: Lesson): Observable<Lesson> {
+    return from(this.pb.collection('lessons').create(lesson)).pipe(
+      map((record: RecordModel) => this.mapRecordToLesson(record))
+    );
   }
 
   /*getLesson(id: number): Observable<Lesson> {

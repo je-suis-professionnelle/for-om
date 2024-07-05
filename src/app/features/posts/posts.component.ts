@@ -84,7 +84,7 @@ export class PostsComponent implements OnInit {
           content: record['content'],
           owner: record['owner'],
           // @ts-ignore
-          ownerName: 'michel',
+          ownerName: this.pb.authStore.model.username,
           lesson: record['lesson'],
           subject: record['subject'],
           created: new Date(),

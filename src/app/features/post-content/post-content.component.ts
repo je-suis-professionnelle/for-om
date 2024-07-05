@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { PostService } from "../../services/post.service";
 import { UserService } from "../../services/user.service";
 import { Post } from "../../models/Post";
@@ -11,6 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {apiUrl} from "../../app.config";
 import PocketBase from "pocketbase";
+import {LessonsService} from "../../services/lessons.service";
 
 @Component({
   selector: 'app-post-content',
@@ -18,14 +19,15 @@ import PocketBase from "pocketbase";
   imports: [
     LucideAngularModule,
     FormsModule,
-    NgIf
+    NgIf,
+    RouterLink
   ],
   templateUrl: './post-content.component.html',
   styleUrls: ['./post-content.component.scss']
 })
 export class PostContentComponent implements OnInit {
   pb = new PocketBase(apiUrl);
-  lessonId: string | null = null;
+  postId: string | null = null;
   lesson: Lesson | null = null;
   post: Post | null = null;
   author: User | null = null;
@@ -37,28 +39,29 @@ export class PostContentComponent implements OnInit {
     private postsService: PostService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private lessonService: LessonsService
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.lessonId = this.route.snapshot.paramMap.get('id');
-    if (!this.lessonId) {
+    this.postId = this.route.snapshot.paramMap.get('id');
+    if (!this.postId) {
       console.error('No lesson ID found in route');
       return;
     }
-    await this.loadLesson();
+    await this.loadPost();
     if (this.post && this.post.owner) {
       await this.loadAuthor();
     }
+    await this.loadLesson();
   }
 
-  async loadLesson(): Promise<void> {
+  async loadPost(): Promise<void> {
     try {
-      if (this.lessonId) {
-        const post = await lastValueFrom(this.postsService.getPostById(this.lessonId));
+      if (this.postId) {
+        const post = await lastValueFrom(this.postsService.getPostById(this.postId));
         if (post) {
           this.post = post;
-          console.log("lesson", this.lesson);
         } else {
           console.error('No post found');
         }
@@ -84,6 +87,17 @@ export class PostContentComponent implements OnInit {
     }
   }
 
+  async loadLesson(): Promise<void> {
+    if (this.post && this.post.lesson) {
+      try {
+        this.lesson = await lastValueFrom(this.lessonService.getLessonById(this.post.lesson));
+      } catch (error) {
+        console.error('Error loading lesson:', error);
+      }
+    } else {
+      console.error('No lesson ID provided in post');
+    }
+  }
 
   openEditModal(): void {
     if (this.post) {
