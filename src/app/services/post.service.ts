@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import PocketBase, {RecordModel} from "pocketbase";
 import {Post} from "../models/Post";
-import {from, map, Observable} from "rxjs";
+import {from, map, Observable, retry} from "rxjs";
+import {apiUrl} from "../app.config";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  pb = new PocketBase('http://127.0.0.1:8090');
+  pb = new PocketBase(apiUrl);
 
   constructor() { }
 

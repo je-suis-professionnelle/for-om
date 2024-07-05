@@ -44,18 +44,16 @@ export class PostsComponent implements OnInit {
   }
 
   async loadPosts(): Promise<void> {
-    if (this.lessonId === null) {
+    if (!this.lessonId) {
       console.error('No lesson ID found in route');
       return;
     }
     try {
       const posts = await lastValueFrom(this.postsService.getAllPostsByLesson(this.lessonId));
-      const postPromises = posts.map(async post => {
+      this.posts = await Promise.all(posts.map(async post => {
         const user = await lastValueFrom(this.userService.getUserById(post.owner));
-        post.ownerName = user.username;
-        return post;
-      });
-      this.posts = await Promise.all(postPromises);
+        return { ...post, ownerName: user.username };
+      }));
     } catch (error) {
       console.error('Error fetching posts', error);
     }

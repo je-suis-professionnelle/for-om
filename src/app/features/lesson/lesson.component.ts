@@ -19,11 +19,12 @@ import {lastValueFrom} from "rxjs";
 export class LessonComponent implements OnInit {
   @Input() lesson!: Lesson;
 
-  constructor(private router: Router, private postService: PostService) { }
+  constructor(private postService: PostService) { }
 
   async ngOnInit(): Promise<void> {
     if (this.lesson && this.lesson.id) {
       try {
+        console.log(`Fetching posts for lesson ${this.lesson.id}`);  // Log before request
         const posts = await lastValueFrom(this.postService.getAllPostsByLesson(this.lesson.id));
         this.lesson.postCount = posts ? posts.length : 0;
         this.lesson.lastPostDate = posts && posts.length > 0 ? new Date(Math.max(...posts.map(post => new Date(post.created).getTime()))) : null;
@@ -33,10 +34,5 @@ export class LessonComponent implements OnInit {
         this.lesson.lastPostDate = null;
       }
     }
-  }
-
-
-  goToLesson(): void {
-    this.router.navigate(['/lessons', this.lesson.id]);
   }
 }

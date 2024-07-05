@@ -4,13 +4,14 @@ import {HttpClient} from "@angular/common/http";
 import {Lesson} from "../models/Lesson";
 import {Observable, map, from} from 'rxjs';
 import PocketBase, {ListResult, RecordModel} from "pocketbase";
+import {apiUrl} from "../app.config";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LessonsService {
 
-  pb = new PocketBase('http://127.0.0.1:8090');
+  pb = new PocketBase(apiUrl);
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +29,6 @@ export class LessonsService {
     );
   }
 
-  // Utility function to map RecordModel to Lesson
   private mapRecordToLesson(record: RecordModel): Lesson {
     return {
       id: record.id,
