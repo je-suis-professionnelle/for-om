@@ -1,10 +1,18 @@
-<div class="p-5 bg-white rounded-lg flex items-center justify-between space-x-8 my-3">
-  <a [routerLink]="['/lessons', lesson.id, 'posts']" class="flex-1 flex justify-between items-center">
-      <div class="w-fit p-4 bg-gray-300 rounded">
-        {{lesson.id}}
-      </div>
-      <div class="w-fit p-4 rounded-lg bg-purple-300">
-        {{lesson.title}}
-      </div>
-  </a>
-</div>
+<a [routerLink]="['/lessons', lesson.id, 'posts']" class="grid grid-cols-3 gap-4 p-5 rounded-lg my-3 bg-white shadow hover:bg-gray-100 transition">
+  <div class="flex justify-center items-center flex-1">
+    <div class="p-4 bg-purple-300 rounded text-center w-full overflow-hidden text-ellipsis whitespace-nowrap" [title]="lesson.title">
+      {{lesson.title}}
+    </div>
+  </div>
+  <div class="flex justify-center items-center flex-1">
+    <div class="p-4 rounded-lg bg-purple-300 text-center w-full overflow-hidden text-ellipsis whitespace-nowrap">
+      {{lesson.postCount}}
+    </div>
+  </div>
+  <div class="flex justify-center items-center flex-1">
+    <div class="p-4 bg-gray-300 rounded text-center w-full overflow-hidden text-ellipsis whitespace-nowrap">
+      <p *ngIf="lesson.lastPostDate; else noPosts" [title]="lesson.lastPostDate | date:'short'">{{ lesson.lastPostDate | date:'short' }}</p>
+      <ng-template #noPosts>No posts</ng-template>
+    </div>
+  </div>
+</a>
