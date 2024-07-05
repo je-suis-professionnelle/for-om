@@ -8,8 +8,8 @@ import {AuthGuard} from "./shared/authguard";
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'posts/:id', component: PostsComponent, canActivate: [AuthGuard]},
-  { path: 'post/:id', component: PostContentComponent, canActivate: [AuthGuard]},
+  { path: 'lessons/:id/posts', component: PostsComponent, canActivate: [AuthGuard]},
+  { path: 'posts/:id', component: PostContentComponent, canActivate: [AuthGuard]},
   // { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

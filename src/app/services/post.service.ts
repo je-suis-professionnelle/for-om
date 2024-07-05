@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import PocketBase, {RecordModel} from "pocketbase";
 import {Post} from "../models/Post";
 import {from, map, Observable} from "rxjs";
-import {Lesson} from "../models/Lesson";
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +49,4 @@ export class PostService {
     })
     );
   }
-
 }
