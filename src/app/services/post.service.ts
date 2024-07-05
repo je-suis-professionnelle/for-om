@@ -42,4 +42,13 @@ export class PostService {
     }
   }
 
+  getPostById(postId: string): Observable<Post> {
+    console.log("postId", postId)
+    return from(this.pb.collection('posts').getOne(postId)).pipe(
+    map((record: RecordModel) => {
+        return this.mapRecordToPost(record);
+    })
+    );
+  }
+
 }

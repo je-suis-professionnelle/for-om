@@ -23,11 +23,9 @@ export class LoginComponent {
   constructor(private loginService: LoginService, private router: Router) { }
 
   async onSubmit() {
-    console.log('Username: ', this.username);
-    console.log('Password: ', this.password);
     try {
       const response = await firstValueFrom(this.loginService.login(this.username, this.password));
-      localStorage.setItem('jwt', response.token);  // Stocker le token JWT si nécessaire
+      localStorage.setItem('jwt', response.token);
       await this.router.navigate(['/']);
       console.log(response);
     } catch (error) {
