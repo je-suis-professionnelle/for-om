@@ -7,6 +7,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Post} from "../../models/Post";
 import {apiUrl} from "../../app.config";
 import PocketBase from "pocketbase";
+import {catchError, concatMap, forkJoin, map, of, retry, switchMap} from "rxjs";
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-lessons',
@@ -28,7 +30,7 @@ export class LessonsComponent implements OnInit {
   showModal = false;
   newLessonTitle = '';
 
-  constructor(private lessonsService: LessonsService) { }
+  constructor(private lessonsService: LessonsService, private postService: PostService) {}
 
   ngOnInit(): void {
     this.loadLessons();
@@ -36,11 +38,42 @@ export class LessonsComponent implements OnInit {
 
   loadLessons(): void {
     this.lessonsService.getAllLessons().subscribe({
-      next: (data) => {
-        this.lessons = data;
+      next: (lessons) => {
+        this.lessons = lessons;
+        this.updatePostCounts(lessons);
       },
       error: (error) => {
         console.error('Error fetching lessons', error);
+      }
+    });
+  }
+
+  updatePostCounts(lessons: Lesson[]): void {
+    of(...lessons).pipe(
+      concatMap(lesson =>
+        this.postService.getAllPostsByLesson(lesson.id).pipe(
+          catchError(error => {
+            console.error(`Error fetching posts for lesson ${lesson.id}`, error);
+            return of([]);
+          }),
+          map(posts => ({
+            lessonId: lesson.id,
+            postCount: posts.length,
+            lastPostDate: posts.length > 0 ? new Date(Math.max(...posts.map(post => new Date(post.created).getTime()))) : null
+          }))
+        )
+      )
+    ).subscribe({
+      next: ({ lessonId, postCount, lastPostDate }) => {
+        const lesson = this.lessons.find(l => l.id === lessonId);
+        if (lesson) {
+          console.log('Updating lesson', lessonId, postCount, lastPostDate);
+          lesson.postCount = postCount;
+          lesson.lastPostDate = lastPostDate;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching lessons or post counts', error);
       }
     });
   }

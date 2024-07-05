@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 //import {pb} from "../app.config";
 import {Lesson} from "../models/Lesson";
-import {Observable, map, from} from 'rxjs';
+import {Observable, map, from, catchError} from 'rxjs';
 import PocketBase, {ListResult, RecordModel} from "pocketbase";
 import {apiUrl} from "../app.config";
 
@@ -34,6 +34,21 @@ export class LessonsService {
       postCount: 0,
       lastPostDate: null
     }
+  }
+
+  getAllPostsByLesson(lessonId: string): Observable<any[]> {
+    return from(
+      this.pb.collection('posts').getFullList({
+        filter: `lessonId="${lessonId}"`,
+        expand: ''
+      })
+    ).pipe(
+      map((records: any[]) => records),
+      catchError(error => {
+        console.error('Error fetching posts', error);
+        throw error;
+      })
+    );
   }
 
   getLessonById(id: string): Observable<Lesson> {

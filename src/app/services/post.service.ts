@@ -21,7 +21,7 @@ export class PostService {
     );
   }
 
-  getAllPostsByLesson(lessonId: string): Observable<Post[]> {
+  /*getAllPostsByLesson(lessonId: string): Observable<Post[]> {
     return from(this.pb.collection('posts').getFullList({
       sort: '-created',
       filters: [
@@ -36,6 +36,10 @@ export class PostService {
         return records.map(record => this.mapRecordToPost(record));
       })
     );
+  }*/
+
+  getAllPostsByLesson(lessonId: string): Observable<any[]> {
+    return from(this.pb.collection('posts').getFullList({ filter: `lesson="${lessonId}"` }));
   }
 
   private mapRecordToPost(record: RecordModel): Post {
