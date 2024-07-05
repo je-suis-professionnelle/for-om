@@ -4,10 +4,9 @@ import {LessonsService} from "../../services/lessons.service";
 import {LessonComponent} from "../lesson/lesson.component";
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Post} from "../../models/Post";
 import {apiUrl} from "../../app.config";
 import PocketBase from "pocketbase";
-import {catchError, concatMap, forkJoin, map, of, retry, switchMap} from "rxjs";
+import {catchError, concatMap, map, of} from "rxjs";
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -67,7 +66,6 @@ export class LessonsComponent implements OnInit {
       next: ({ lessonId, postCount, lastPostDate }) => {
         const lesson = this.lessons.find(l => l.id === lessonId);
         if (lesson) {
-          console.log('Updating lesson', lessonId, postCount, lastPostDate);
           lesson.postCount = postCount;
           lesson.lastPostDate = lastPostDate;
         }

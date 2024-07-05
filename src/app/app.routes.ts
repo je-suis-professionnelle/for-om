@@ -10,10 +10,4 @@ export const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'lessons/:id/posts', component: PostsComponent, canActivate: [AuthGuard]},
   { path: 'posts/:id', component: PostContentComponent, canActivate: [AuthGuard]},
-  // { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
-
-// Add login route
-// Add main page route
-// Add item route
-

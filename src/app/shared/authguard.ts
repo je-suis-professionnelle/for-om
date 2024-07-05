@@ -13,13 +13,6 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router) { }
 
   canActivate(): boolean {
-    /*const token = localStorage.getItem('jwt');
-    if (!token) {
-      this.router.navigate(['/login']);
-      return false;
-    }
-    return true;*/
-    console.log("authStore", this.pb.authStore.isValid);
     if (!this.pb.authStore.isValid) {
       this.router.navigate(['/login']);
       return false;

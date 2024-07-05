@@ -27,7 +27,6 @@ export class LoginComponent {
       const response = await firstValueFrom(this.loginService.login(this.username, this.password));
       localStorage.setItem('jwt', response.token);
       await this.router.navigate(['/']);
-      console.log(response);
     } catch (error) {
       console.error(error);
     }

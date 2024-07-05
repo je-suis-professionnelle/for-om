@@ -75,10 +75,8 @@ export class PostContentComponent implements OnInit {
 
   async loadAuthor(): Promise<void> {
     try {
-      console.log("owner", this.post?.owner);
       if (this.post && this.post.owner) {
         this.author = await lastValueFrom(this.userService.getUserById(this.post.owner));
-        console.log("author", this.author);
       } else {
         console.error('No author ID provided in lesson');
       }

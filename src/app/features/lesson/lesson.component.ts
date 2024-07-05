@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Lesson} from "../../models/Lesson";
-import {Router, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {PostService} from "../../services/post.service";
 import {DatePipe, NgIf} from "@angular/common";
-import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-lesson',
@@ -24,9 +23,7 @@ export class LessonComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.lesson && this.lesson.id) {
       try {
-        console.log(`Fetching posts for lesson ${this.lesson.id}`);
         const posts = await this.postService.getAllPostsByLesson(this.lesson.id).toPromise();
-        console.log(`Posts for lesson ${this.lesson.id}:`, posts);
         // @ts-ignore
         this.lesson.postCount = posts.length;
         // @ts-ignore

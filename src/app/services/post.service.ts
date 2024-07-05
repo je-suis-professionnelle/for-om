@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import PocketBase, {RecordModel} from "pocketbase";
 import {Post} from "../models/Post";
-import {from, map, Observable, retry} from "rxjs";
+import {from, map, Observable} from "rxjs";
 import {apiUrl} from "../app.config";
 
 @Injectable({
@@ -21,23 +21,6 @@ export class PostService {
     );
   }
 
-  /*getAllPostsByLesson(lessonId: string): Observable<Post[]> {
-    return from(this.pb.collection('posts').getFullList({
-      sort: '-created',
-      filters: [
-        {
-          field: 'lesson',
-          operator: '=',
-          value: lessonId
-        }
-      ]
-    })).pipe(
-      map((records: RecordModel[]) => {
-        return records.map(record => this.mapRecordToPost(record));
-      })
-    );
-  }*/
-
   getAllPostsByLesson(lessonId: string): Observable<any[]> {
     return from(this.pb.collection('posts').getFullList({ filter: `lesson="${lessonId}"` }));
   }
@@ -56,7 +39,6 @@ export class PostService {
   }
 
   getPostById(postId: string): Observable<Post> {
-    console.log("postId", postId)
     return from(this.pb.collection('posts').getOne(postId)).pipe(
     map((record: RecordModel) => {
         return this.mapRecordToPost(record);

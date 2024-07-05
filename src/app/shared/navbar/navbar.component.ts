@@ -17,9 +17,6 @@ export class NavbarComponent {
   title: string = 'For\'om';
   constructor(private authService: LoginService) { }
 
-  ngOnInit(): void {
-  }
-
   logout(): void {
     this.authService.logout();
   }
