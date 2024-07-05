@@ -8,7 +8,7 @@ import { Lesson } from "../../models/Lesson";
 import { lastValueFrom } from "rxjs";
 import {LucideAngularModule} from "lucide-angular";
 import {FormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 import {apiUrl} from "../../app.config";
 import PocketBase from "pocketbase";
 import {LessonsService} from "../../services/lessons.service";
@@ -20,7 +20,8 @@ import {LessonsService} from "../../services/lessons.service";
     LucideAngularModule,
     FormsModule,
     NgIf,
-    RouterLink
+    RouterLink,
+    NgClass
   ],
   templateUrl: './post-content.component.html',
   styleUrls: ['./post-content.component.scss']
@@ -34,6 +35,7 @@ export class PostContentComponent implements OnInit {
   showModal: boolean = false;
   editPostContent: string = '';
   editPostTitle: string = '';
+  userId: string | null = null;
 
   constructor(
     private postsService: PostService,
@@ -44,6 +46,8 @@ export class PostContentComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
+    // @ts-ignore
+    this.userId = this.pb.authStore.model.id;
     this.postId = this.route.snapshot.paramMap.get('id');
     if (!this.postId) {
       console.error('No lesson ID found in route');

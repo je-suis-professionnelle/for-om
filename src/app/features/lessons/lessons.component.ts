@@ -6,7 +6,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {apiUrl} from "../../app.config";
 import PocketBase from "pocketbase";
-import {catchError, concatMap, map, of} from "rxjs";
+import {catchError, concatMap, from, map, of, retry, switchMap} from "rxjs";
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -56,18 +56,18 @@ export class LessonsComponent implements OnInit {
             return of([]);
           }),
           map(posts => ({
-            lessonId: lesson.id,
+            lesson: lesson.id,
             postCount: posts.length,
             lastPostDate: posts.length > 0 ? new Date(Math.max(...posts.map(post => new Date(post.created).getTime()))) : null
           }))
         )
       )
     ).subscribe({
-      next: ({ lessonId, postCount, lastPostDate }) => {
-        const lesson = this.lessons.find(l => l.id === lessonId);
-        if (lesson) {
-          lesson.postCount = postCount;
-          lesson.lastPostDate = lastPostDate;
+      next: ({ lesson, postCount, lastPostDate }) => {
+        const lessonO = this.lessons.find(l => l.id === lesson);
+        if (lessonO) {
+          lessonO.postCount = postCount;
+          lessonO.lastPostDate = lastPostDate;
         }
       },
       error: (error) => {

@@ -51,13 +51,19 @@ export class PostsComponent implements OnInit {
     try {
       const posts = await lastValueFrom(this.postsService.getAllPostsByLesson(this.lessonId));
       this.posts = await Promise.all(posts.map(async post => {
-        const user = await lastValueFrom(this.userService.getUserById(post.owner));
-        return { ...post, ownerName: user.username };
+        try {
+          const user = await this.pb.collection('users').getOne(post.owner);
+          return { ...post, ownerName: user['username'] };
+        } catch (error) {
+          console.error(`Error fetching user ${post.owner}`, error);
+          return { ...post, ownerName: 'Unknown' };
+        }
       }));
     } catch (error) {
       console.error('Error fetching posts', error);
     }
   }
+
 
   async createPost(): Promise<void> {
     this.showModal = true;

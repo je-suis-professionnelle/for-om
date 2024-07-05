@@ -13,13 +13,6 @@ export class PostService {
 
   constructor() { }
 
-  createPost(post: Post): Observable<Post> {
-    return from(this.pb.collection('posts').create(post)).pipe(
-      map((record: RecordModel) => {
-        return this.mapRecordToPost(record);
-      })
-    );
-  }
 
   getAllPostsByLesson(lessonId: string): Observable<any[]> {
     return from(this.pb.collection('posts').getFullList({ filter: `lesson="${lessonId}"` }));
@@ -33,7 +26,7 @@ export class PostService {
       ownerName: '',
       lesson: record['lesson'],
       subject: record['subject'],
-      created: new Date(record.created),
+      created: new Date(record['created']),
       updated: new Date(record.updated),
     }
   }

@@ -37,10 +37,18 @@
           </div>
         </figcaption>
         <div class="flex justify-between px-6 py-4">
-          <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full" (click)="openEditModal()">
+          <button
+            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full"
+            [ngClass]="{'opacity-50 cursor-not-allowed': post?.owner !== this.userId}"
+            (click)="post?.owner !== this.userId ? null : openEditModal()"
+          >
             Modifier
           </button>
-          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="deletePost()">
+          <button
+            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+            [ngClass]="{'opacity-50 cursor-not-allowed': post?.owner !== this.userId}"
+            (click)="deletePost()"
+          >
             Supprimer
           </button>
         </div>
